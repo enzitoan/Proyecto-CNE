@@ -13,6 +13,12 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
+			<div class="col-md-3">
+				<button type="button" class="btn btn-primary btn-get">Get Data</button>
+				<button type="button" class="btn btn-success btn-insert">Insert Data</button>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-md-12">
 				<table id="tbl-datos" class="table table-responsive table-condensed table-hover">
 				</table>
@@ -91,33 +97,34 @@
 
 			$.each(aDatos, function(index, val) {
 				if (index > 0) {
-					oData["RUE_SDESMARCA"] = val[0];
-					oData["RUE_SDESMODELO"] = val[1];
-					oData["RUE_SDETMODELO"] = val[2];
-					oData["RUE_SDESTRACCION"] = val[3];
-					oData["RUE_SDESTRANSMISION"] = val[4];
-					oData["RUE_SDESCOMBUSTIBLE"] = val[5];
-					oData["RUE_SDESCILINDRADA"] = val[6];
-					oData["RUE_SDESCARROCERIA"] = val[7];
-					oData["RUE_SCODINFORME"] = val[8];
-					oData["RUE_SFHOHOMOLOGACION"] = val[9];
-					oData["RUE_SDESCATEGORIA"] = val[10];
-					oData["RUE_SDESEMPRESAHOMO"] = val[11];
-					oData["RUE_SDESNORMA"] = val[12];
-					oData["RUE_SDESCO2"] = val[13];
-					oData["RUE_SRENDCIUDAD"] = val[14];
-					oData["RUE_SRENDCARRETERA"] = val[15];
-					oData["RUE_SRENDMIXTO"] = val[16];
-					oData["RUE_STIPO1"] = val[17];
-					oData["RUE_STIPO2"] = val[18];
-					oData["RUE_STIPO3"] = val[19];
-					oData["RUE_STIPO4"] = val[20];
+					oData["RUE_SDESMARCA"] = encodeURI(val[0]);
+					oData["RUE_SDESMODELO"] = encodeURI(val[1]);
+					oData["RUE_SDETMODELO"] = encodeURI(val[2]);
+					oData["RUE_SDESTRACCION"] = encodeURI(val[3]);
+					oData["RUE_SDESTRANSMISION"] = encodeURI(val[4]);
+					oData["RUE_SDESCOMBUSTIBLE"] = encodeURI(val[5]);
+					oData["RUE_SDESCILINDRADA"] = encodeURI(val[6]);
+					oData["RUE_SDESCARROCERIA"] = encodeURI(val[7]);
+					oData["RUE_SCODINFORME"] = encodeURI(val[8]);
+					oData["RUE_SFHOHOMOLOGACION"] = encodeURI(val[9]);
+					oData["RUE_SDESCATEGORIA"] = encodeURI(val[10]);
+					oData["RUE_SDESEMPRESAHOMO"] = encodeURI(val[11]);
+					oData["RUE_SDESNORMA"] = encodeURI(val[12]);
+					oData["RUE_SDESCO2"] = encodeURI(val[13]);
+					oData["RUE_SRENDCIUDAD"] = encodeURI(val[14]);
+					oData["RUE_SRENDCARRETERA"] = encodeURI(val[15]);
+					oData["RUE_SRENDMIXTO"] = encodeURI(val[16]);
+					oData["RUE_STIPO1"] = encodeURI(val[17]);
+					oData["RUE_STIPO2"] = encodeURI(val[18]);
+					oData["RUE_STIPO3"] = encodeURI(val[19]);
+					oData["RUE_STIPO4"] = encodeURI(val[20]);
 
 					console.log(oData);
 
 					$.ajax({
 						url: 'RENDI.php',
 						type: 'POST',
+						async: false,
 						dataType: 'json',
 						data: oData,
 					})
@@ -125,20 +132,14 @@
 						console.log("success");
 						console.log(json);
 						if (json.numerror != 0) {
-							alert('N° Error [' + json.numerror + '] : ' + json.msjerror);
-							return false;
+							console.log("Registro[" + index + "]: ERROR [" + json.numerror + "] : " + json.msjerror);
 						} else {
 							console.log("Registro[" + index + "]: OK");
-							//alert('Se han insertado los registros');
 						}
 					})
 					.fail(function(xhr, status, error) {
-						console.log("error");
-						alert(error);
+						console.log("Registro[" + index + "]:" + error + "[" + xhr.responseText + "]");
 					})
-					.always(function() {
-						console.log("complete");
-					});
 					
 					console.groupEnd();
 				}
@@ -153,8 +154,17 @@
 		}
 
 		$(document).ready(function() {
-			getData();
-			insertData();
+
+			$('.btn-get').click(function(event) {
+				getData();
+			});
+
+			$('.btn-insert').click(function(event) {
+				if (aDatos.length > 0) {
+					insertData();					
+				}
+			});
+			
 		});
 		
 	</script>
