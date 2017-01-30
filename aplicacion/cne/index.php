@@ -16,6 +16,7 @@
 			<div class="col-md-3">
 				<button type="button" class="btn btn-primary btn-get">Get Data</button>
 				<button type="button" class="btn btn-success btn-insert">Insert Data</button>
+				<span class="label label-info"></span>
 			</div>
 		</div>
 		<div class="row">
@@ -31,12 +32,16 @@
 		const API_KEY = '40af6c02526a47f970a1323460c8289b47fd508c';
 		var aDatos = [];
 
+		var setMensaje = function(mensaje){
+			$('.label-info').text(mensaje);
+		};
+
 		var getData = function() {
 			console.group("[" + arguments.callee.name + "]");
+
 			$.ajax({
 				url: 'http://cne.cloudapi.junar.com/api/v2/datastreams/RENDI-URBAN-Y-EMISI-DE/data.ajson/',
 				type: 'GET',
-				async: false,
 				dataType: 'json',
 				data: {
 					'auth_key': API_KEY,
@@ -77,6 +82,8 @@
 					});						
 					body = body + '</tbody>';
 					$('#tbl-datos').append(body);
+					setMensaje('');
+
 				} else {
 					alert('No Data');
 				}
@@ -85,15 +92,16 @@
 				console.log("error");
 			})
 			.always(function() {
-				console.log("complete");
+				console.groupEnd();
 			});
 
-			console.groupEnd();
+			
 		};
 
 		var insertData = function() {
 			console.group("[" + arguments.callee.name + "]");
 			var oData = {};
+			var registros = 0;
 
 			$.each(aDatos, function(index, val) {
 				if (index > 0) {
@@ -140,10 +148,14 @@
 					.fail(function(xhr, status, error) {
 						console.log("Registro[" + index + "]:" + error + "[" + xhr.responseText + "]");
 					})
-					
-					console.groupEnd();
+					.always(function() {
+						console.groupEnd();
+					});
+
+					registros = index;
 				}
 			});
+			setMensaje('Registros insertados');
 
 		};
 
@@ -156,11 +168,13 @@
 		$(document).ready(function() {
 
 			$('.btn-get').click(function(event) {
+				setMensaje('Obteniendo datos...');
 				getData();
 			});
 
 			$('.btn-insert').click(function(event) {
 				if (aDatos.length > 0) {
+					setMensaje('Insertando datos...');
 					insertData();					
 				}
 			});

@@ -1,17 +1,8 @@
 <?php
 	/*Conectar db*/
+
+	include_once("config.php");
 	
-	//echo "LenData: " . $lenData . "</br>";
-
-	// $server = "localhost";
-	// $user = "joelsali_cne";
-	// $pass = "password123$";
-	// $bd = "joelsali_cne";	
-	$server = "localhost";
-	$user = "root";
-	$pass = "";
-	$bd = "cne";
-
 	$mysql = mysql_connect($server,$user,$pass);
 	mysql_set_charset('utf8');
 	mysql_select_db($bd, $mysql);
